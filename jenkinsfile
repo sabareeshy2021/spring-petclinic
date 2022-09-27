@@ -1,0 +1,27 @@
+pipeline {
+    agent any
+    stages {
+        stage('source code') {
+            steps {
+                git url: 'https://github.com/sabareeshy2021/spring-petclinic.git', branch: 'Release1'
+            }
+        }
+        stage('build') {
+            steps {
+                agent {label 'openjdk-11-maven1'}
+                sh 'mvn package' 
+                    
+            }
+        }
+    stage('Archive the Artificats') {
+        steps {
+            archive 'target/*.jar'
+      }
+    }
+    stage('Junit Results') {
+       steps {
+            junit "**/surefire-reports/*.xml"
+           }
+      }
+    }
+}
